@@ -1,0 +1,311 @@
+<form class="formgrid grid" [formGroup]="personaForm" (ngSubmit)="onSubmit()">
+  <h1 class="col-12 flex justify-content-center">Registro de personas</h1>
+
+  <h2 class="col-12">Datos básicos</h2>
+
+  <div class="field p-float-label col-12">
+    <input pInputText id="nombre" formControlName="nombre" />
+    <label htmlFor="nombre">Nombre</label>
+  </div>
+
+  <div class="field col-6">
+    <p-dropdown
+      formControlName="tipoPersona"
+      [options]="tiposVia"
+      optionLabel="elemento"
+      optionValue="abreviatura"
+      placeholder="Tipo de persona"
+    ></p-dropdown>
+  </div>
+
+  <div class="field col-2">
+    <p-dropdown
+      formControlName="tipoDocumento"
+      [options]="tiposVia"
+      optionLabel="elemento"
+      optionValue="abreviatura"
+      placeholder="Tipo de documento"
+    ></p-dropdown>
+  </div>
+
+  <div class="field p-float-label col-4">
+    <input pInputText id="numDocumento" formControlName="numeroDocumento" />
+    <label htmlFor="numDocumento">Numero de documento</label>
+  </div>
+
+  <p-divider class="col-12"></p-divider>
+  <h2 class="col-12">Contactos</h2>
+  <div formArrayName="contactos" class="col-12">
+    <div
+      class="grid justify-content-end mb-3 px-2"
+      *ngFor="let contacto of contactos.controls; let i = index"
+      [formGroupName]="i"
+    >
+      <div class="p-float-label col-7 mt-3">
+        <input pInputText id="descContacto" formControlName="descContacto" />
+        <label htmlFor="descContacto">Detalle de contacto {{ i + 1 }}</label>
+      </div>
+
+      <div class="field col-5 mt-3">
+        <p-dropdown
+          formControlName="tipoContacto"
+          [options]="tiposVia"
+          optionLabel="elemento"
+          optionValue="abreviatura"
+          placeholder="Tipo de contacto"
+        ></p-dropdown>
+      </div>
+
+      <p-button
+        icon="pi pi-minus-circle"
+        type="button"
+        (onClick)="removeContacto(i)"
+        styleClass="mt-3"
+        severity="danger"
+      ></p-button>
+    </div>
+
+    <p-button
+      icon="pi pi-plus-circle"
+      class="flex justify-content-center"
+      type="button"
+      (onClick)="addContacto()"
+    ></p-button>
+  </div>
+
+  <p-divider class="col-12"></p-divider>
+  <h2 class="col-12">Direcciones</h2>
+  <div formArrayName="direcciones" class="col-12">
+    <div
+      class="grid align-items-center justify-content-end"
+      *ngFor="let direccion of direcciones.controls; let i = index"
+      [formGroupName]="i"
+    >
+      <h3 class="col-12">Direccion {{ i + 1 }}</h3>
+      <div class="field col-3">
+        <p-dropdown
+          formControlName="tipoVia"
+          [options]="tiposVia"
+          optionLabel="elemento"
+          optionValue="abreviatura"
+          placeholder="Tipo de via"
+        ></p-dropdown>
+      </div>
+
+      <div class="p-float-label col-3 mt-3 field">
+        <input
+          pInputText
+          id="viaPrincipal"
+          type="text"
+          formControlName="viaPrincipal"
+        />
+        <label htmlFor="viaPrincipal">Numero o nombre de via principal</label>
+      </div>
+
+      <div class="p-float-label col-3 mt-3 field">
+        <input
+          pInputText
+          id="letraVia"
+          type="text"
+          formControlName="letraVia"
+        />
+        <label htmlFor="letraVia">Letra de via principal</label>
+      </div>
+
+      <div class="field flex col-1 gap-2">
+        <p-checkbox
+          formControlName="prefijo"
+          value="BIS"
+          inputId="prefijoIn"
+        ></p-checkbox>
+        <label for="prefijoIn">Bis</label>
+      </div>
+
+      <div class="p-float-label col-2 mt-3 field">
+        <input
+          pInputText
+          id="letraPrefijo"
+          type="text"
+          formControlName="letraPrefijo"
+        />
+        <label htmlFor="letraPrefijo">Letra de prefijo</label>
+      </div>
+
+      <div class="field col-3">
+        <p-dropdown
+          formControlName="tipoVia"
+          [options]="tiposVia"
+          optionLabel="elemento"
+          optionValue="abreviatura"
+          placeholder="Cuadrante"
+        ></p-dropdown>
+      </div>
+
+      <div class="p-float-label col-3 mt-3 field">
+        <input
+          pInputText
+          id="viaGeneradora"
+          type="text"
+          formControlName="viaGeneradora"
+        />
+        <label htmlFor="viaGeneradora">Numero de vía generadora</label>
+      </div>
+
+      <div class="p-float-label col-3 mt-3 field">
+        <input
+          pInputText
+          id="letraViaGeneradora"
+          type="text"
+          formControlName="letraViaGeneradora"
+        />
+        <label htmlFor="letraViaGeneradora">Letra de via generadora</label>
+      </div>
+
+      <div class="field flex gap-2 col-1">
+        <p-checkbox
+          formControlName="sufijo"
+          value="BIS"
+          inputId="sufijoIn"
+        ></p-checkbox>
+        <label for="sufijoIn">Bis</label>
+      </div>
+
+      <div class="p-float-label col-2 mt-3 field">
+        <input
+          pInputText
+          id="letraSufijo"
+          type="text"
+          formControlName="letraSufijo"
+        />
+        <label htmlFor="letraSufijo">Letra de sufijo</label>
+      </div>
+
+      <div class="p-float-label col-1 mt-3 field">
+        <input pInputText id="placa" type="number" formControlName="placa" />
+        <label htmlFor="placa">Número de placa</label>
+      </div>
+
+      <div class="field col-3">
+        <p-dropdown
+          formControlName="cuadrantePlaca"
+          [options]="tiposVia"
+          optionLabel="elemento"
+          optionValue="abreviatura"
+          placeholder="Cuadrante"
+        ></p-dropdown>
+      </div>
+
+      <div class="field col-1">
+        <p-dropdown
+          formControlName="barrio"
+          [options]="tiposVia"
+          optionLabel="elemento"
+          optionValue="abreviatura"
+          placeholder="Barrio"
+        ></p-dropdown>
+      </div>
+
+      <div class="p-float-label col-3 mt-3 field">
+        <input
+          pInputText
+          id="nombreBarrio"
+          type="text"
+          formControlName="nombreBarrio"
+        />
+        <label htmlFor="nombreBarrio">Nombre del barrio</label>
+      </div>
+
+      <div class="field col-1">
+        <p-dropdown
+          formControlName="manzana"
+          [options]="tiposVia"
+          optionLabel="elemento"
+          optionValue="abreviatura"
+          placeholder="Manzana"
+        ></p-dropdown>
+      </div>
+
+      <div class="p-float-label col-3 mt-3 field">
+        <input
+          pInputText
+          id="numeroManzana"
+          type="text"
+          formControlName="numeroManzana"
+        />
+        <label htmlFor="numeroManzana">Identificador de la manzana</label>
+      </div>
+
+      <div class="field col-2">
+        <p-dropdown
+          formControlName="urbanizacion"
+          [options]="tiposVia"
+          optionLabel="elemento"
+          optionValue="abreviatura"
+          placeholder="Urbanizacion"
+        ></p-dropdown>
+      </div>
+
+      <div class="p-float-label col-3 mt-3 field">
+        <input
+          pInputText
+          id="nombreUrbanizacion"
+          type="text"
+          formControlName="nombreUrbanizacion"
+        />
+        <label htmlFor="nombreUrbanizacion">Nombre de la urbanizacion</label>
+      </div>
+
+      <div class="field col-2">
+        <p-dropdown
+          formControlName="tipoPredio"
+          [options]="tiposVia"
+          optionLabel="elemento"
+          optionValue="abreviatura"
+          placeholder="Tipo de predio"
+        ></p-dropdown>
+      </div>
+
+      <div class="p-float-label col-2 mt-3 field">
+        <input
+          pInputText
+          id="identificadorPredio"
+          type="text"
+          formControlName="identificadorPredio"
+        />
+        <label htmlFor="identificadorPredio">Nombre del predio</label>
+      </div>
+
+      <div class="p-float-label col-3 mt-3 field">
+        <input
+          pInputText
+          id="complemento"
+          type="text"
+          formControlName="complemento"
+        />
+        <label htmlFor="complemento">Complemento</label>
+      </div>
+
+      <p-button
+        icon="pi pi-minus-circle"
+        class="mr-2"
+        type="button"
+        (onClick)="removeDireccion(i)"
+        severity="danger"
+      ></p-button>
+    </div>
+
+    <p-button
+      icon="pi pi-plus-circle"
+      class="flex justify-content-center"
+      type="button"
+      (onClick)="addDireccion()"
+    ></p-button>
+  </div>
+
+  <p-button
+    label="Guardar"
+    type="submit"
+    class="col-12 mt-3"
+    styleClass="w-full"
+  ></p-button>
+</form>

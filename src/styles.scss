@@ -1,1 +1,26 @@
 /* You can add global styles to this file, and also import other style files */
+@import "primeng/resources/themes/soho-dark/theme.css";
+@import "primeng/resources/primeng.css";
+@import "primeicons/primeicons.css";
+
+:root {
+  --primary-color: #323342;
+}
+
+input,
+.p-dropdown {
+  width: 100% !important;
+}
+
+.field {
+  margin-top: 1rem;
+}
+
+h1 {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+svg {
+  fill: white;
+}
