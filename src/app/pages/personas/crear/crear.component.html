@@ -3,17 +3,22 @@
 
   <h2 class="col-12">Datos básicos</h2>
 
-  <div class="field p-float-label col-12">
+  <div class="field p-float-label col-6">
     <input pInputText id="nombre" formControlName="nombre" />
     <label htmlFor="nombre">Nombre</label>
+  </div>
+
+  <div class="field p-float-label col-6">
+    <input pInputText id="apellido" formControlName="apellido" />
+    <label htmlFor="apellido">Apellido</label>
   </div>
 
   <div class="field col-6">
     <p-dropdown
       formControlName="tipoPersona"
-      [options]="tiposVia"
-      optionLabel="elemento"
-      optionValue="abreviatura"
+      [options]="tiposPersona"
+      optionLabel="nombre"
+      optionValue="id"
       placeholder="Tipo de persona"
     ></p-dropdown>
   </div>
@@ -21,9 +26,9 @@
   <div class="field col-2">
     <p-dropdown
       formControlName="tipoDocumento"
-      [options]="tiposVia"
-      optionLabel="elemento"
-      optionValue="abreviatura"
+      [options]="tiposDocumento"
+      optionLabel="nombre"
+      optionValue="valor"
       placeholder="Tipo de documento"
     ></p-dropdown>
   </div>
@@ -49,9 +54,9 @@
       <div class="field col-5 mt-3">
         <p-dropdown
           formControlName="tipoContacto"
-          [options]="tiposVia"
-          optionLabel="elemento"
-          optionValue="abreviatura"
+          [options]="tiposContacto"
+          optionLabel="nombre"
+          optionValue="valor"
           placeholder="Tipo de contacto"
         ></p-dropdown>
       </div>
@@ -85,8 +90,8 @@
       <div class="field col-3">
         <p-dropdown
           formControlName="tipoVia"
-          [options]="tiposVia"
-          optionLabel="elemento"
+          [options]="nomenclaturaPos(1)"
+          optionLabel="descripcion"
           optionValue="abreviatura"
           placeholder="Tipo de via"
         ></p-dropdown>
@@ -134,8 +139,8 @@
       <div class="field col-3">
         <p-dropdown
           formControlName="tipoVia"
-          [options]="tiposVia"
-          optionLabel="elemento"
+          [options]="nomenclaturaPos(6)"
+          optionLabel="descripcion"
           optionValue="abreviatura"
           placeholder="Cuadrante"
         ></p-dropdown>
@@ -188,8 +193,8 @@
       <div class="field col-3">
         <p-dropdown
           formControlName="cuadrantePlaca"
-          [options]="tiposVia"
-          optionLabel="elemento"
+          [options]="nomenclaturaPos(6)"
+          optionLabel="descripcion"
           optionValue="abreviatura"
           placeholder="Cuadrante"
         ></p-dropdown>
@@ -198,8 +203,8 @@
       <div class="field col-1">
         <p-dropdown
           formControlName="barrio"
-          [options]="tiposVia"
-          optionLabel="elemento"
+          [options]="nomenclaturaPos(13)"
+          optionLabel="descripcion"
           optionValue="abreviatura"
           placeholder="Barrio"
         ></p-dropdown>
@@ -218,8 +223,8 @@
       <div class="field col-1">
         <p-dropdown
           formControlName="manzana"
-          [options]="tiposVia"
-          optionLabel="elemento"
+          [options]="nomenclaturaPos(15)"
+          optionLabel="descripcion"
           optionValue="abreviatura"
           placeholder="Manzana"
         ></p-dropdown>
@@ -238,8 +243,8 @@
       <div class="field col-2">
         <p-dropdown
           formControlName="urbanizacion"
-          [options]="tiposVia"
-          optionLabel="elemento"
+          [options]="nomenclaturaPos(17)"
+          optionLabel="descripcion"
           optionValue="abreviatura"
           placeholder="Urbanizacion"
         ></p-dropdown>
@@ -258,8 +263,8 @@
       <div class="field col-2">
         <p-dropdown
           formControlName="tipoPredio"
-          [options]="tiposVia"
-          optionLabel="elemento"
+          [options]="nomenclaturaPos(19)"
+          optionLabel="descripcion"
           optionValue="abreviatura"
           placeholder="Tipo de predio"
         ></p-dropdown>
@@ -275,14 +280,14 @@
         <label htmlFor="identificadorPredio">Nombre del predio</label>
       </div>
 
-      <div class="p-float-label col-3 mt-3 field">
-        <input
-          pInputText
-          id="complemento"
-          type="text"
+      <div class="field col-3">
+        <p-dropdown
           formControlName="complemento"
-        />
-        <label htmlFor="complemento">Complemento</label>
+          [options]="nomenclaturaPos(21)"
+          optionLabel="descripcion"
+          optionValue="abreviatura"
+          placeholder="Complemento"
+        ></p-dropdown>
       </div>
 
       <p-button

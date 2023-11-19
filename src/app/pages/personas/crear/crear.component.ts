@@ -1,46 +1,44 @@
-import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { InputTextModule } from 'primeng/inputtext';
-import {
-  FormArray,
-  FormBuilder,
-  FormGroup,
-  FormsModule,
-  ReactiveFormsModule,
-} from '@angular/forms';
-import { DropdownModule } from 'primeng/dropdown';
-import { DividerModule } from 'primeng/divider';
-import { ButtonModule } from 'primeng/button';
-import { CheckboxModule } from 'primeng/checkbox';
+import { HttpClient } from '@angular/common/http';
+import { Component, OnInit } from '@angular/core';
+import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
 
-interface Via {
-  elemento: string;
+interface Nomenclatura {
+  id: number;
+  posicion: number;
+  descripcion: string;
   abreviatura: string;
 }
 
+interface TipoPersona {
+  id: number;
+  nombre: string;
+}
+
+interface TipoDocumento {
+  valor: number;
+  nombre: string;
+}
+
+interface TipoContacto {
+  nombre: string;
+  valor: string;
+}
+
 @Component({
-  standalone: true,
-  imports: [
-    CommonModule,
-    InputTextModule,
-    FormsModule,
-    ReactiveFormsModule,
-    DropdownModule,
-    DividerModule,
-    ButtonModule,
-    CheckboxModule,
-  ],
   templateUrl: './crear.component.html',
   styles: ``,
 })
-export class CrearComponent {
-  tiposVia: Via[] | undefined;
-
+export class CrearPersonaComponent implements OnInit {
+  nomenclaturas: Nomenclatura[] | undefined;
+  tiposPersona: TipoPersona[] | undefined;
+  tiposDocumento: TipoDocumento[] | undefined;
+  tiposContacto: TipoContacto[] | undefined;
   personaForm: FormGroup;
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder, private http: HttpClient) {
     this.personaForm = this.fb.group({
       nombre: [''],
+      apellido: [''],
       tipoPersona: [''],
       tipoDocumento: [''],
       numeroDocumento: [''],
@@ -49,12 +47,12 @@ export class CrearComponent {
           tipoVia: [''],
           viaPrincipal: [''],
           letraVia: [''],
-          prefijo: [''],
+          prefijo: [[]],
           letraPrefijo: [''],
           cuadrante: [''],
           viaGeneradora: [''],
           letraViaGeneradora: [''],
-          sufijo: [''],
+          sufijo: [[]],
           letraSufijo: [''],
           placa: [''],
           cuadrantePlaca: [''],
@@ -101,12 +99,12 @@ export class CrearComponent {
         tipoVia: [''],
         viaPrincipal: [''],
         letraVia: [''],
-        prefijo: [''],
+        prefijo: [[]],
         letraPrefijo: [''],
         cuadrante: [''],
         viaGeneradora: [''],
         letraViaGeneradora: [''],
-        sufijo: [''],
+        sufijo: [[]],
         letraSufijo: [''],
         placa: [''],
         cuadrantePlaca: [''],
@@ -132,87 +130,52 @@ export class CrearComponent {
   }
 
   ngOnInit() {
-    this.tiposVia = [
-      {
-        elemento: 'Autopista',
-        abreviatura: 'AU',
-      },
-      {
-        elemento: 'Avenida',
-        abreviatura: 'AV',
-      },
-      {
-        elemento: 'Avenida Calle',
-        abreviatura: 'AC',
-      },
-      {
-        elemento: 'Avenida Carrera',
-        abreviatura: 'AK',
-      },
-      {
-        elemento: 'Bulevar',
-        abreviatura: 'BL',
-      },
-      {
-        elemento: 'Calle',
-        abreviatura: 'CL',
-      },
-      {
-        elemento: 'Carrera',
-        abreviatura: 'KR',
-      },
-      {
-        elemento: 'Carretera',
-        abreviatura: 'CT',
-      },
-      {
-        elemento: 'Circular',
-        abreviatura: 'CQ',
-      },
-      {
-        elemento: 'Circunvalar',
-        abreviatura: 'CV',
-      },
-      {
-        elemento: 'Cuentas corridas',
-        abreviatura: 'CC',
-      },
-      {
-        elemento: 'Diagonal',
-        abreviatura: 'DG',
-      },
-      {
-        elemento: 'Pasaje',
-        abreviatura: 'PJ',
-      },
-      {
-        elemento: 'Paseo',
-        abreviatura: 'PS',
-      },
-      {
-        elemento: 'Peatonal',
-        abreviatura: 'PT',
-      },
-      {
-        elemento: 'Transversal',
-        abreviatura: 'TV',
-      },
-      {
-        elemento: 'Troncal',
-        abreviatura: 'TC',
-      },
-      {
-        elemento: 'Variante',
-        abreviatura: 'VT',
-      },
-      {
-        elemento: 'Via',
-        abreviatura: 'VI',
-      },
-    ];
+    this.http
+      .get<Nomenclatura[]>('http://localhost:3000/nomenclaturas')
+      .subscribe((data) => {
+        this.nomenclaturas = data;
+      });
+
+    this.http
+      .get<TipoPersona[]>('http://localhost:3000/personas/tipos')
+      .subscribe((data) => {
+        this.tiposPersona = data;
+      });
+
+    this.http
+      .get<TipoDocumento[]>('http://localhost:3000/documentos/tipos')
+      .subscribe((data) => {
+        this.tiposDocumento = data;
+      });
+
+    this.http
+      .get<TipoContacto[]>('http://localhost:3000/contactos/tipos')
+      .subscribe((data) => {
+        this.tiposContacto = data;
+      });
+  }
+
+  public nomenclaturaPos(posicion: number) {
+    return this.nomenclaturas?.filter((n) => n.posicion === posicion);
   }
 
   onSubmit() {
-    console.log(this.personaForm.value);
+    const data = this.personaForm.value;
+    data.direcciones.forEach((element: any) => {
+      if (element.prefijo.length > 0) {
+        element.prefijo = element.prefijo[0];
+      } else {
+        element.prefijo = '';
+      }
+      if (element.sufijo.length > 0) {
+        element.sufijo = element.sufijo[0];
+      } else {
+        element.sufijo = '';
+      }
+    });
+    console.log(data);
+    this.http.post('http://localhost:3000/personas', data).subscribe((data) => {
+      console.log(data);
+    });
   }
 }

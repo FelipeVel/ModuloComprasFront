@@ -1,0 +1,12 @@
+<div class="grid align-items-end">
+  <h1 class="col-12 flex justify-content-center">Ingreso</h1>
+  <h2 class="col-12">Numero de documento</h2>
+  <div class="col-11">
+    <input pInputText pKeyFilter="int" [(ngModel)]="documento" />
+  </div>
+  <p-button
+    label="Ingresar"
+    (onClick)="ingresar()"
+    class="mt-2 col-1"
+  ></p-button>
+</div>
