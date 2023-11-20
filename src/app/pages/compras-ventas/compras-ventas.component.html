@@ -1,5 +1,5 @@
 @if (showPanel) {
-<form class="formgrid grid" [formGroup]="facturaForm">
+<form class="formgrid grid" [formGroup]="facturaForm" (ngSubmit)="submitForm()">
   <h1 class="col-12 flex justify-content-center">Crear facturas</h1>
 
   <h2 class="col-12">
@@ -97,6 +97,11 @@
       (onClick)="addItem()"
     ></p-button>
   </div>
+  <p-button
+    class="flex justify-content-center mt-3"
+    type="submit"
+    label="Crear factura"
+  ></p-button>
 </form>
 } @else {
 <b class="col-12 flex justify-content-center"

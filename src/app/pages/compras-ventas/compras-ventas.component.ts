@@ -148,4 +148,11 @@ export class ComprasVentasComponent implements OnInit {
     }
     this.items.removeAt(index);
   }
+
+  public submitForm(): void {
+    this.items.controls.forEach((item: any, index: number) => {
+      item.controls.producto.setValue(this.selectedProducts[index]);
+    });
+    console.log(this.facturaForm.value);
+  }
 }
