@@ -1,1 +1,105 @@
-<p>compras-ventas works!</p>
+@if (showPanel) {
+<form class="formgrid grid" [formGroup]="facturaForm">
+  <h1 class="col-12 flex justify-content-center">Crear facturas</h1>
+
+  <h2 class="col-12">
+    Tipo de factura: {{ tipoPersona === "CL" ? "Venta" : "Compra" }}
+  </h2>
+
+  <div class="col-12 field">
+    <b>{{ tipoPersona === "CL" ? "Clientes" : "Proveedores" }}</b>
+    <p-listbox
+      styleClass="mt-3"
+      [options]="personasList"
+      formControlName="persona"
+      optionLabel="nombreCompleto"
+      [filter]="true"
+      [style]="{ width: '100%' }"
+      [listStyle]="{ 'max-height': '220px' }"
+    ></p-listbox>
+  </div>
+  <div formArrayName="items" class="col-12">
+    <b class="w-full">Items</b>
+    @for (item of items.controls; track $index) {
+    <div class="w-full grid mb-4" [formGroupName]="$index">
+      <span class="p-input-icon-right col-12 mt-3">
+        <i class="pi pi-search px-3"></i>
+        <input
+          type="text"
+          pInputText
+          (keydown.enter)="buscarProducto($event, $index)"
+        />
+      </span>
+
+      @if (listasProductos[$index] && listasProductos[$index].length > 0) {
+      <p-table
+        [value]="listasProductos[$index]"
+        [(selection)]="selectedProducts[$index]"
+        dataKey="id"
+        [tableStyle]="{ width: '100%' }"
+        class="w-full ml-1 mt-3"
+      >
+        <ng-template pTemplate="header">
+          <tr>
+            <th></th>
+            <th>Codigo</th>
+            <th>Nombre</th>
+            <th>Categoria</th>
+            <th>Precio</th>
+            <th>Stock</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-producto>
+          <tr>
+            <td>
+              <p-tableRadioButton [value]="producto"></p-tableRadioButton>
+            </td>
+            <td>{{ producto.id }}</td>
+            <td>{{ producto.nombre }}</td>
+            <td>{{ producto.categoria.nombre }}</td>
+            <td>{{ producto.precio | currency }}</td>
+            <td>
+              <p-tag
+                [value]="producto.stock > 0 ? 'Disponible' : 'Agotado'"
+                [severity]="getSeverity(producto.stock)"
+              ></p-tag>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+      @if (selectedProducts[$index] && selectedProducts[$index].stock > 0) {
+      <p-inputNumber
+        title="Cantidad"
+        class="w-full flex justify-content-center mt-2"
+        formControlName="cantidad"
+        mode="decimal"
+        [showButtons]="true"
+        inputId="cantidad"
+        [min]="0"
+        [max]="tipoPersona === 'CL' ? selectedProducts[$index].stock : 100"
+      >
+      </p-inputNumber>
+      } }
+
+      <p-button
+        icon="pi pi-minus-circle"
+        type="button"
+        (onClick)="removeItem($index)"
+        styleClass="mt-3"
+        severity="danger"
+      ></p-button>
+    </div>
+    }
+    <p-button
+      icon="pi pi-plus-circle"
+      class="flex justify-content-center"
+      type="button"
+      (onClick)="addItem()"
+    ></p-button>
+  </div>
+</form>
+} @else {
+<b class="col-12 flex justify-content-center"
+  >No hay contenido para mostrar, por favor ingrese con un rol permitido</b
+>
+}
