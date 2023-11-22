@@ -73,6 +73,18 @@ export class ComprasVentasComponent implements OnInit {
     return this.facturaForm.get('items') as FormArray;
   }
 
+  totalizar() {
+    this.items.controls.forEach((item: any, index: number) => {
+      item.controls.producto.setValue(this.selectedProducts[index]);
+    });
+    const newTotal = this.facturaForm.value.items.reduce(
+      (sum: number, item: any) => sum + item.producto.precio * item.cantidad,
+      0
+    );
+
+    alert(`El total de la factura es: ${newTotal}`);
+  }
+
   ngOnInit(): void {
     switch (this.empleado?.cargo.codigo) {
       case '1':
@@ -149,10 +161,21 @@ export class ComprasVentasComponent implements OnInit {
     this.items.removeAt(index);
   }
 
-  public submitForm(): void {
+  submitForm() {
     this.items.controls.forEach((item: any, index: number) => {
       item.controls.producto.setValue(this.selectedProducts[index]);
     });
-    console.log(this.facturaForm.value);
+
+    const randomNumber = Math.floor(Math.random() * 90000) + 10000; // Generar número aleatorio de 5 dígitos
+
+    const data = {
+      ...this.facturaForm.value,
+      randomNumber: randomNumber,
+    };
+
+    console.log('data', data);
+    //this.http.post('http://localhost:3000/facturas', data).subscribe((data) => {
+    //console.log(data);
+    //});
   }
 }
