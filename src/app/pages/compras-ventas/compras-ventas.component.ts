@@ -166,14 +166,11 @@ export class ComprasVentasComponent implements OnInit {
       item.controls.producto.setValue(this.selectedProducts[index]);
     });
 
-    const randomNumber = Math.floor(Math.random() * 90000) + 10000; // Generar número aleatorio de 5 dígitos
-
     const data = {
       ...this.facturaForm.value,
-      randomNumber: randomNumber,
+      empleado: this.empleado,
     };
-
-    console.log('data', data);
+    console.log(data);
     //this.http.post('http://localhost:3000/facturas', data).subscribe((data) => {
     //console.log(data);
     //});
