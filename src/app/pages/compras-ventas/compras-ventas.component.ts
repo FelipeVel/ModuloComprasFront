@@ -50,6 +50,7 @@ export class ComprasVentasComponent implements OnInit {
   public personasList: Persona[] = [];
   public showPanel: boolean = false;
   public tipoPersona: string = '';
+  public tipoFactura: string = '';
   public codigoProducto: number = 0;
   public listasProductos: Producto[][] = [];
   public selectedProducts: Producto[] = [];
@@ -90,18 +91,22 @@ export class ComprasVentasComponent implements OnInit {
       case '1':
         this.showPanel = true;
         this.tipoPersona = 'PR';
+        this.tipoFactura = 'DC';
         break;
       case '3':
         this.showPanel = true;
         this.tipoPersona = 'CL';
+        this.tipoFactura = 'DV';
         break;
       case '4':
         this.showPanel = true;
         this.tipoPersona = 'CL';
+        this.tipoFactura = 'VE';
         break;
       case '6':
         this.showPanel = true;
         this.tipoPersona = 'PR';
+        this.tipoFactura = 'CO';
         break;
       default:
         this.tipoPersona = '';
@@ -125,7 +130,7 @@ export class ComprasVentasComponent implements OnInit {
   }
 
   public buscarProducto(event: any, index: number): void {
-    console.log(event.target.value);
+    event.preventDefault();
     this.http
       .get<Producto[]>(`http://localhost:3000/productos/${event.target.value}`)
       .subscribe((data) => {
@@ -171,8 +176,10 @@ export class ComprasVentasComponent implements OnInit {
       empleado: this.empleado,
     };
     console.log(data);
-    //this.http.post('http://localhost:3000/facturas', data).subscribe((data) => {
-    //console.log(data);
-    //});
+    this.http
+      .post(`http://localhost:3000/facturas/${this.tipoFactura}`, data)
+      .subscribe((data) => {
+        console.log(data);
+      });
   }
 }
