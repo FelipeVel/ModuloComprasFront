@@ -40,6 +40,11 @@ type Categoria = {
   id: string;
   nombre: string;
 };
+
+type Item = {
+  producto: Producto;
+  cantidad: number;
+};
 @Component({
   templateUrl: './compras-ventas.component.html',
   styles: ``,
@@ -54,6 +59,7 @@ export class ComprasVentasComponent implements OnInit {
   public codigoProducto: number = 0;
   public listasProductos: Producto[][] = [];
   public selectedProducts: Producto[] = [];
+  public devolucion: boolean = false;
 
   constructor(private fb: FormBuilder, private http: HttpClient) {
     this.facturaForm = this.fb.group({
@@ -92,11 +98,17 @@ export class ComprasVentasComponent implements OnInit {
         this.showPanel = true;
         this.tipoPersona = 'PR';
         this.tipoFactura = 'DC';
+        this.facturaForm.removeControl('persona');
+        this.facturaForm.addControl('numFactura', this.fb.control(''));
+        this.devolucion = true;
         break;
       case '3':
         this.showPanel = true;
         this.tipoPersona = 'CL';
         this.tipoFactura = 'DV';
+        this.facturaForm.removeControl('persona');
+        this.facturaForm.addControl('numFactura', this.fb.control(''));
+        this.devolucion = true;
         break;
       case '4':
         this.showPanel = true;
@@ -117,7 +129,6 @@ export class ComprasVentasComponent implements OnInit {
         .get<PersonaIn[]>(`http://localhost:3000/personas/${this.tipoPersona}`)
         .subscribe((data) => {
           this.personasList = data.map((persona) => {
-            console.log(persona);
             return {
               nombreCompleto: `${persona.nombre} ${persona.apellido}`,
               tipoPersona: persona.tipoPersona,
@@ -137,6 +148,29 @@ export class ComprasVentasComponent implements OnInit {
         this.listasProductos[index] = data;
       });
     event.target.value = '';
+  }
+
+  public buscarFactura(event: any): void {
+    event.preventDefault();
+    this.http
+      .get<Item[]>(
+        `http://localhost:3000/facturas/${this.tipoFactura}/${event.target.value}`
+      )
+      .subscribe((data) => {
+        this.items.clear();
+        data.forEach((item) => {
+          this.items.push(
+            this.fb.group({
+              producto: [item.producto],
+              cantidad: [0],
+            })
+          );
+          this.listasProductos.push([item.producto]);
+          this.selectedProducts.push(item.producto);
+        });
+        console.log(this.listasProductos);
+        console.log(this.selectedProducts);
+      });
   }
 
   public getSeverity(stock: number): string {

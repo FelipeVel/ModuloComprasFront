@@ -7,7 +7,14 @@
   </h2>
 
   <div class="col-12 field">
-    <b>{{ tipoPersona === "CL" ? "Clientes" : "Proveedores" }}</b>
+    <b>{{
+      devolucion
+        ? "Numero de factura"
+        : tipoPersona === "CL"
+        ? "Clientes"
+        : "Proveedores"
+    }}</b>
+    @if (!devolucion) {
     <p-listbox
       styleClass="mt-3"
       [options]="personasList"
@@ -17,11 +24,24 @@
       [style]="{ width: '100%' }"
       [listStyle]="{ 'max-height': '220px' }"
     ></p-listbox>
+    } @else {
+    <p-inputNumber
+      inputId="numFactura"
+      formControlName="numFactura"
+      placeholder="Numero de factura"
+      [style]="{ width: '100%' }"
+      styleClass="mt-3"
+      class="w-full"
+      (keydown.enter)="buscarFactura($event)"
+    ></p-inputNumber>
+    }
   </div>
+
   <div formArrayName="items" class="col-12">
     <b class="w-full">Items</b>
     @for (item of items.controls; track $index) {
     <div class="w-full grid mb-4" [formGroupName]="$index">
+      @if (!devolucion) {
       <span class="p-input-icon-right col-12 mt-3">
         <i class="pi pi-search px-3"></i>
         <input
@@ -30,8 +50,7 @@
           (keydown.enter)="buscarProducto($event, $index)"
         />
       </span>
-
-      @if (listasProductos[$index] && listasProductos[$index].length > 0) {
+      } @if (listasProductos[$index] && listasProductos[$index].length > 0) {
       <p-table
         [value]="listasProductos[$index]"
         [(selection)]="selectedProducts[$index]"
@@ -76,11 +95,14 @@
         [showButtons]="true"
         inputId="cantidad"
         [min]="0"
-        [max]="tipoPersona === 'CL' ? selectedProducts[$index].stock : 100"
+        [max]="
+          tipoPersona === 'CL' || devolucion
+            ? selectedProducts[$index].stock
+            : 100
+        "
       >
       </p-inputNumber>
-      } }
-
+      } } @if (!devolucion) {
       <p-button
         icon="pi pi-minus-circle"
         type="button"
@@ -88,14 +110,16 @@
         styleClass="mt-3"
         severity="danger"
       ></p-button>
+      }
     </div>
-    }
+    } @if (!devolucion) {
     <p-button
       icon="pi pi-plus-circle"
       class="flex justify-content-center"
       type="button"
       (onClick)="addItem()"
     ></p-button>
+    }
     <p-button
       class="flex justify-content-center mt-3"
       type="button"
