@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 interface Nomenclatura {
   id: number;
@@ -24,6 +24,40 @@ interface TipoContacto {
   valor: string;
 }
 
+interface CompDireccion {
+  posicion: number;
+  descripcion: string;
+  obligatoriedad: number;
+}
+
+type Diccionario = {
+  [key: string]: string;
+};
+
+const componenteDict: Diccionario = {
+  'TIPO VIA': 'tipoVia',
+  'NUMERO VIA PRINCIPAL': 'viaPrincipal',
+  'LETRA VIA PRINCIPAL': 'letraVia',
+  'PREFIJO BIS': 'prefijo',
+  'LETRA PREFIJO': 'letraPrefijo',
+  CUADRANTE: 'cuadrante',
+  'NUMERO VIA GENERADORA': 'viaGeneradora',
+  'LETRA VIA GENERADORA': 'letraViaGeneradora',
+  'SUFIJO BIS': 'sufijo',
+  'LETRA SUFIJO': 'letraSufijo',
+  'NUMERO PLACA': 'placa',
+  'CUADRANTE PLACA': 'cuadrantePlaca',
+  BARRIO: 'barrio',
+  'NOMBRE BARRIO': 'nombreBarrio',
+  MANZANA: 'manzana',
+  'IDENTIFICADOR MANZANA': 'numeroManzana',
+  URBANIZACION: 'urbanizacion',
+  'NOMBRE URBANIZACION': 'nombreUrbanizacion',
+  'TIPO PREDIO': 'tipoPredio',
+  'IDENTIFICADOR PREDIO': 'identificadorPredio',
+  COMPLEMENTO: 'complemento',
+};
+
 @Component({
   templateUrl: './crear.component.html',
   styles: ``,
@@ -33,15 +67,16 @@ export class CrearPersonaComponent implements OnInit {
   tiposPersona: TipoPersona[] | undefined;
   tiposDocumento: TipoDocumento[] | undefined;
   tiposContacto: TipoContacto[] | undefined;
+  compDirecciones: CompDireccion[] | undefined;
   personaForm: FormGroup;
 
   constructor(private fb: FormBuilder, private http: HttpClient) {
     this.personaForm = this.fb.group({
-      nombre: [''],
-      apellido: [''],
-      tipoPersona: [''],
-      tipoDocumento: [''],
-      numeroDocumento: [''],
+      nombre: ['', Validators.required],
+      apellido: ['', Validators.required],
+      tipoPersona: ['', Validators.required],
+      tipoDocumento: ['', Validators.required],
+      numeroDocumento: ['', Validators.required],
       direcciones: this.fb.array([
         this.fb.group({
           tipoVia: [''],
@@ -69,8 +104,8 @@ export class CrearPersonaComponent implements OnInit {
       ]),
       contactos: this.fb.array([
         this.fb.group({
-          descContacto: [''],
-          tipoContacto: [''],
+          descContacto: ['', Validators.required],
+          tipoContacto: ['', Validators.required],
         }),
       ]),
     });
@@ -87,8 +122,8 @@ export class CrearPersonaComponent implements OnInit {
   addContacto() {
     this.contactos.push(
       this.fb.group({
-        descContacto: [''],
-        tipoContacto: [''],
+        descContacto: ['', Validators.required],
+        tipoContacto: ['', Validators.required],
       })
     );
   }
@@ -119,6 +154,15 @@ export class CrearPersonaComponent implements OnInit {
         complemento: [''],
       })
     );
+    this.compDirecciones!.forEach((element) => {
+      if (element.obligatoriedad === 1) {
+        this.direcciones.controls.forEach((control) => {
+          control
+            .get(componenteDict[element.descripcion])
+            ?.setValidators([Validators.required]);
+        });
+      }
+    });
   }
 
   removeContacto(i: number) {
@@ -152,6 +196,20 @@ export class CrearPersonaComponent implements OnInit {
       .get<TipoContacto[]>('http://localhost:3000/contactos/tipos')
       .subscribe((data) => {
         this.tiposContacto = data;
+      });
+    this.http
+      .get<CompDireccion[]>('http://localhost:3000/direcciones')
+      .subscribe((data) => {
+        this.compDirecciones = data;
+        this.compDirecciones.forEach((element) => {
+          if (element.obligatoriedad === 1) {
+            this.direcciones.controls.forEach((control) => {
+              control
+                .get(componenteDict[element.descripcion])
+                ?.setValidators([Validators.required]);
+            });
+          }
+        });
       });
   }
 
