@@ -9,6 +9,7 @@ import { DividerModule } from 'primeng/divider';
 import { ButtonModule } from 'primeng/button';
 import { CheckboxModule } from 'primeng/checkbox';
 import { PersonasRoutingModule } from './personas.routing.module';
+import { KeyFilterModule } from 'primeng/keyfilter';
 
 @NgModule({
   declarations: [CrearPersonaComponent, IngresarPersonasComponent],
@@ -22,6 +23,7 @@ import { PersonasRoutingModule } from './personas.routing.module';
     ButtonModule,
     CheckboxModule,
     PersonasRoutingModule,
+    KeyFilterModule,
   ],
   exports: [CrearPersonaComponent, IngresarPersonasComponent],
 })

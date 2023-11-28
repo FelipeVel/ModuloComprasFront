@@ -34,7 +34,12 @@
   </div>
 
   <div class="field p-float-label col-4">
-    <input pInputText id="numDocumento" formControlName="numeroDocumento" />
+    <input
+      pInputText
+      id="numDocumento"
+      pKeyFilter="int"
+      formControlName="numeroDocumento"
+    />
     <label htmlFor="numDocumento">Numero de documento</label>
   </div>
 
@@ -186,7 +191,7 @@
       </div>
 
       <div class="p-float-label col-1 mt-3 field">
-        <input pInputText id="placa" type="number" formControlName="placa" />
+        <input pInputText id="placa" pKeyFilter="int" formControlName="placa" />
         <label htmlFor="placa">Número de placa</label>
       </div>
 

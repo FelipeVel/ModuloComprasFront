@@ -1,12 +1,17 @@
-<div class="grid align-items-end">
+<form
+  class="grid align-items-end"
+  [formGroup]="ingresoForm"
+  (ngSubmit)="ingresar()"
+>
   <h1 class="col-12 flex justify-content-center">Ingreso</h1>
   <h2 class="col-12">Codigo de empleado</h2>
   <div class="col-11">
-    <input pInputText pKeyFilter="int" [(ngModel)]="codEmpleado" />
+    <input pInputText pKeyFilter="int" formControlName="codEmpleado" />
   </div>
   <p-button
     label="Ingresar"
-    (onClick)="ingresar()"
     class="mt-2 col-1"
+    type="submit"
+    [disabled]="!ingresoForm.valid"
   ></p-button>
-</div>
+</form>

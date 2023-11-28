@@ -1,6 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
+import pdfMake from 'pdfmake/build/pdfmake';
+import pdfFonts from 'pdfmake/build/vfs_fonts';
+pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 type Empleado = {
   codigo: string;
@@ -214,6 +217,58 @@ export class ComprasVentasComponent implements OnInit {
       .post(`http://localhost:3000/facturas/${this.tipoFactura}`, data)
       .subscribe((data) => {
         console.log(data);
+        const docDefinition = {
+          content: [
+            {
+              text: `Factura de ${this.tipoFactura}`,
+              style: 'header',
+            },
+            {
+              text: `N° Factura: ${(data as any).numFactura}`,
+              style: 'subheader',
+            },
+            {
+              text: `Empleado: ${this.empleado?.nombre} ${this.empleado?.apellido}`,
+              style: 'subheader',
+            },
+            {
+              text: `Persona: ${this.facturaForm.value.persona.nombreCompleto}`,
+              style: 'subheader',
+            },
+            {
+              text: `Fecha: ${new Date().toLocaleDateString()}`,
+              style: 'subheader',
+            },
+            {
+              text: `Productos:`,
+              style: 'subheader',
+            },
+            {
+              ul: this.facturaForm.value.items.map((item: any) => {
+                return `${item.producto.nombre} - Cantidad: ${item.cantidad} - Precio: ${item.producto.precio}`;
+              }),
+            },
+            {
+              text: `Total: ${this.facturaForm.value.items.reduce(
+                (sum: number, item: any) =>
+                  sum + item.producto.precio * item.cantidad,
+                0
+              )}`,
+              style: 'subheader',
+            },
+          ],
+          styles: {
+            header: {
+              fontSize: 18,
+              bold: true,
+            },
+            subheader: {
+              fontSize: 15,
+              bold: true,
+            },
+          },
+        };
+        pdfMake.createPdf(docDefinition).open();
       });
   }
 }
