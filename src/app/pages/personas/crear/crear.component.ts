@@ -234,6 +234,7 @@ export class CrearPersonaComponent implements OnInit {
     console.log(data);
     this.http.post('http://localhost:3000/personas', data).subscribe((data) => {
       console.log(data);
+      this.personaForm.reset();
     });
   }
 }

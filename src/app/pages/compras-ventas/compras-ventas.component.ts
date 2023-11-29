@@ -232,7 +232,11 @@ export class ComprasVentasComponent implements OnInit {
               style: 'subheader',
             },
             {
-              text: `Persona: ${this.facturaForm.value.persona.nombreCompleto}`,
+              text: `${
+                this.facturaForm.value.persona
+                  ? `Persona: ${this.facturaForm.value.persona.nombreCompleto}`
+                  : ''
+              }`,
               style: 'subheader',
             },
             {
@@ -269,6 +273,7 @@ export class ComprasVentasComponent implements OnInit {
           },
         };
         pdfMake.createPdf(docDefinition).open();
+        this.facturaForm.reset();
       });
   }
 }
